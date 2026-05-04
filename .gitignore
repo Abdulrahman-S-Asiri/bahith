@@ -1,0 +1,38 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.venv/
+venv/
+env/
+.env
+.env.*
+
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+*.egg-info/
+dist/
+build/
+
+.streamlit/secrets.toml
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log
+
+# HF model cache (downloaded to user home, but ignore any local copy too)
+hf_cache/
+models/
+
+# Local tooling
+.claude/
+
+# Test artifacts
+smoke.log
+install.log

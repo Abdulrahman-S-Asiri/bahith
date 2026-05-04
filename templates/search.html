@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{% if q %}{{ q }} · {% endif %}البحث · باحث{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <span class="eyebrow">Search</span>
+  <h2>البحث الدلالي</h2>
+  <p class="subtitle">a query in Arabic, ranked by meaning</p>
+</header>
+
+<form
+  class="search-shell"
+  hx-get="/api/search"
+  hx-target="#results-region"
+  hx-swap="innerHTML"
+  hx-trigger="submit, change from:.dim-pills, change from:[name=top_k], keyup changed delay:400ms from:[name=q]"
+  hx-push-url="true"
+  hx-include="this"
+  action="/search"
+  method="get">
+  <div class="field">
+    {% include "_search_icon.html" %}
+    <input
+      type="search"
+      name="q"
+      autocomplete="off"
+      autofocus
+      placeholder="اكتب سؤالك أو فكرتك بالعربية..."
+      value="{{ q or '' }}"
+      aria-label="استعلام البحث">
+    <button type="submit" class="submit">Search</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="group">
+      <span class="label">Dim</span>
+      <div class="dim-pills" role="radiogroup" aria-label="Embedding dimension">
+        {% for d in supported_dims %}
+        <input
+          type="radio"
+          name="dim"
+          id="dim-{{ d }}"
+          value="{{ d }}"
+          {% if d == dim %}checked{% endif %}>
+        <label for="dim-{{ d }}">{{ d }}</label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="label">Top&nbsp;K</span>
+      <div class="stepper" data-stepper data-min="1" data-max="10">
+        <button type="button" data-step="-1" aria-label="نقص">−</button>
+        <output>{{ top_k }}</output>
+        <button type="button" data-step="1" aria-label="زد">+</button>
+        <input type="hidden" name="top_k" value="{{ top_k }}">
+      </div>
+    </div>
+  </div>
+</form>
+
+<section id="results-region">
+  {% include "_results.html" %}
+</section>
+{% endblock %}

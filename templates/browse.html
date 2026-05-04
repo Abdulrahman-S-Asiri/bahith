@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}التصفح · باحث{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <span class="eyebrow">Browse</span>
+  <h2>تصفّح المجموعة</h2>
+  <p class="subtitle">a curated Arabic corpus, organised by theme</p>
+</header>
+
+<div class="cat-grid">
+  {% for cat in categories %}
+  <a class="cat-tile" href="/browse/{{ cat.name }}">
+    <div class="name">{{ cat.label_ar }}</div>
+    <div class="count"><span class="la">{{ cat.count }}</span> نصوص</div>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

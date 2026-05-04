@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ label_ar }} · التصفح · باحث{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <span class="eyebrow">{{ category|title }}</span>
+  <h2>{{ label_ar }}</h2>
+  <p class="subtitle"><span class="la">{{ entries|length }}</span> entries</p>
+</header>
+
+<nav class="breadcrumb">
+  <a href="/browse">التصفح</a><span class="sep">›</span>{{ label_ar }}
+</nav>
+
+<ul class="entries">
+  {% for e in entries %}
+  <li>
+    <span class="num la">{{ loop.index }}</span>
+    <span>{{ e.text }}</span>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

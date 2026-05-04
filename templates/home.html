@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}باحث · بحث دلالي عربي{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1><span class="underline">باحث</span></h1>
+  <p class="tagline">Arabic semantic search, powered by Matryoshka embeddings.</p>
+  <p class="ar-tagline">اكتب فكرة، يفهمك المحرّك ويعيد لك أقرب النصوص في معناها — لا في كلماتها.</p>
+
+  <form class="search-shell" action="/search" method="get" role="search">
+    <div class="field">
+      {% include "_search_icon.html" %}
+      <input
+        type="search"
+        name="q"
+        autocomplete="off"
+        autofocus
+        placeholder="اكتب سؤالك أو فكرتك بالعربية..."
+        aria-label="استعلام البحث">
+      <button type="submit" class="submit">Search</button>
+    </div>
+  </form>
+
+  <div class="chips" aria-label="أمثلة على البحث">
+    {% for s in suggestions %}
+      <a class="chip" href="/search?q={{ s|urlencode }}">{{ s }}</a>
+    {% endfor %}
+  </div>
+</section>
+
+<div class="star-divider">{% include "_star.html" %}</div>
+
+<section class="triptych">
+  <article class="step">
+    <div class="num">I.</div>
+    <h3>تضمين</h3>
+    <p>كل نص يتحوّل إلى متّجه من <span class="la">1024</span> بُعدًا يلتقط معناه.</p>
+  </article>
+  <article class="step">
+    <div class="num">II.</div>
+    <h3>اقتطاع</h3>
+    <p>الـ <span class="la">Matryoshka</span> تتيح اختصار المتّجه إلى <span class="la">64</span> بُعدًا فأكثر.</p>
+  </article>
+  <article class="step">
+    <div class="num">III.</div>
+    <h3>ترتيب</h3>
+    <p>تُحسب درجات التشابه بجداء قياسي، فتظهر النتائج الأقرب معنىً للسؤال.</p>
+  </article>
+</section>
+{% endblock %}

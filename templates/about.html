@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}عن المشروع · باحث{% endblock %}
+
+{% block content %}
+<header class="page-head">
+  <span class="eyebrow">About</span>
+  <h2>عن المشروع</h2>
+  <p class="subtitle">a small homage to Arabic language modelling</p>
+</header>
+
+<div class="prose">
+  <p>
+    «باحث» تجربة موجزة لمحرّك بحث دلالي عربي. لا يبحث عن الكلمات،
+    بل عن المعنى — فإذا سألته عن «فوائد القراءة وتطوير العقل»
+    أعاد إليك الجمل التي تتقاطع مع فكرتك ولو اختلفت ألفاظها.
+  </p>
+  <p class="la">
+    Bāḥith is a compact demonstration of Arabic semantic search.
+    It does not match words; it matches meaning. The model
+    encodes every passage as a high-dimensional vector and ranks
+    candidates by cosine similarity to your query.
+  </p>
+
+  <div class="spec-card">
+    <div class="spec-grid">
+      <div>
+        <div class="lbl">Model</div>
+        <div class="val">
+          <a href="https://huggingface.co/Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B" target="_blank" rel="noopener">Harrier-Arabic-Matryoshka-0.6B</a>
+        </div>
+      </div>
+      <div>
+        <div class="lbl">Base</div>
+        <div class="val la">microsoft/harrier-oss-v1-0.6b</div>
+      </div>
+      <div>
+        <div class="lbl">Embedding dim</div>
+        <div class="val la">1024 (truncatable: 64 · 128 · 256 · 512 · 768)</div>
+      </div>
+      <div>
+        <div class="lbl">Corpus size</div>
+        <div class="val la">{{ corpus_size }} Arabic passages</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--ar-display); color: var(--emerald-deep); font-weight:600; margin-top: 3rem;">
+    كيف تعمل تضمينات Matryoshka؟
+  </h3>
+  <p>
+    تُدرَّب نماذج <span class="la">Matryoshka</span> بحيث تكون
+    أوّل <span class="la">N</span> إحداثيات من المتّجه الكامل
+    تضمينًا صالحًا بحدّ ذاتها. فيمكنك ترميز النصّ مرّة واحدة
+    عند <span class="la">1024</span> بُعدًا، ثم اقتطاع المتّجه
+    وإعادة تطبيعه — دون استدعاء النموذج مجددًا.
+  </p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Matryoshka truncation diagram">
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#0A4F3C"/>
+          <stop offset=".5" stop-color="#0A4F3C"/>
+          <stop offset="1" stop-color="#B8860B"/>
+        </linearGradient>
+      </defs>
+      <text x="300" y="22" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="14" fill="#5A5550">full vector · 1024 dims</text>
+      <rect x="40" y="32" width="520" height="22" fill="url(#g1)"/>
+      <text x="300" y="78" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="14" fill="#5A5550">truncate &amp; renormalise → 256 dims</text>
+      <rect x="40" y="88" width="130" height="22" fill="#0A4F3C"/>
+      <rect x="170" y="88" width="390" height="22" fill="#E8E2D4"/>
+    </svg>
+    <p class="caption">Same model. Same encode pass. Smaller slice — still meaningful.</p>
+  </div>
+
+  <h3 style="font-family: var(--ar-display); color: var(--emerald-deep); font-weight:600; margin-top: 3rem;">
+    التقنيات المستخدمة
+  </h3>
+  <div class="tech-pills">
+    <span class="la">Python</span>
+    <span class="la">FastAPI</span>
+    <span class="la">Jinja2</span>
+    <span class="la">HTMX</span>
+    <span class="la">sentence-transformers</span>
+    <span class="la">PyTorch</span>
+    <span class="la">NumPy</span>
+  </div>
+</div>
+{% endblock %}

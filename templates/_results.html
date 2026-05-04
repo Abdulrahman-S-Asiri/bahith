@@ -1,0 +1,28 @@
+{% if not q %}
+<p class="empty">اكتب استعلامًا في الأعلى لبدء البحث.</p>
+{% elif results %}
+<ul class="results">
+  {% for r in results %}
+  <li class="result">
+    <div class="rank">
+      {% include "_star.html" %}
+      <span class="la">{{ loop.index }}</span>
+    </div>
+    <div class="body">{{ r.text }}</div>
+    <div class="meta">
+      <span class="score la">{{ "%.3f"|format(r.score) }}</span>
+      <span class="category">{{ r.category }}</span>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+<p class="results-meta">
+  <span class="la">⏱ {{ "%.1f"|format(elapsed_ms) }} ms</span>
+  &nbsp;&middot;&nbsp;
+  <span class="la">{{ corpus_size }}</span> نصًا
+  &nbsp;&middot;&nbsp;
+  <span class="la">dim&nbsp;=&nbsp;{{ dim }}</span>
+</p>
+{% else %}
+<p class="empty">لا توجد نتائج.</p>
+{% endif %}
