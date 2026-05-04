@@ -6,6 +6,8 @@
 **معناها** لا حسب كلماتها. مبني على نموذج
 [Harrier-Arabic-Matryoshka-0.6B](https://huggingface.co/Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B).
 
+![معاينة من واجهة باحث · صفحة البحث](docs/screenshot.png)
+
 ---
 
 ## مقدّمة
