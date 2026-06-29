@@ -11,7 +11,14 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from search import SUPPORTED_DIMS, ArabicSearcher, load_corpus
+from search import (
+    DEFAULT_DIM,
+    DEFAULT_TOP_K,
+    MAX_TOP_K,
+    SUPPORTED_DIMS,
+    ArabicSearcher,
+    load_corpus,
+)
 
 ROOT = Path(__file__).parent
 templates = Jinja2Templates(directory=ROOT / "templates")
@@ -60,13 +67,13 @@ def label_ar(category: str) -> str:
 
 
 def run_search(request: Request, q: str, dim: int, top_k: int) -> dict:
-    if not q.strip():
-        return {"q": q, "results": [], "elapsed_ms": 0.0, "dim": dim, "top_k": top_k}
-
     # User input arrives via query string, so guard against bad values.
     if dim not in SUPPORTED_DIMS:
-        dim = 1024
-    top_k = max(1, min(10, top_k))
+        dim = DEFAULT_DIM
+    top_k = max(1, min(MAX_TOP_K, top_k))
+
+    if not q.strip():
+        return {"q": q, "results": [], "elapsed_ms": 0.0, "dim": dim, "top_k": top_k}
 
     t0 = time.perf_counter()
     results = request.app.state.searcher.search(q, top_k=top_k, dim=dim)
@@ -87,7 +94,12 @@ async def home(request: Request):
 
 
 @app.get("/search", response_class=HTMLResponse)
-async def search(request: Request, q: str = "", dim: int = 1024, top_k: int = 5):
+async def search(
+    request: Request,
+    q: str = "",
+    dim: int = DEFAULT_DIM,
+    top_k: int = DEFAULT_TOP_K,
+):
     payload = run_search(request, q, dim, top_k)
     return templates.TemplateResponse(
         request,
@@ -101,7 +113,12 @@ async def search(request: Request, q: str = "", dim: int = 1024, top_k: int = 5)
 
 
 @app.get("/api/search", response_class=HTMLResponse)
-async def api_search(request: Request, q: str = "", dim: int = 1024, top_k: int = 5):
+async def api_search(
+    request: Request,
+    q: str = "",
+    dim: int = DEFAULT_DIM,
+    top_k: int = DEFAULT_TOP_K,
+):
     # HTMX endpoint: returns just the result list, no full page chrome.
     payload = run_search(request, q, dim, top_k)
     return templates.TemplateResponse(

@@ -32,6 +32,7 @@ models/
 
 # Local tooling
 .claude/
+ARABIC_TRAINING_GUIDE.local.md
 
 # Test artifacts
 smoke.log
