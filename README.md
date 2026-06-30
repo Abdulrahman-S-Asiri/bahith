@@ -134,7 +134,9 @@ python evaluate.py
 3. على صفحة `/search` يمكنك تغيير «بُعد التضمين» (64، 128، 256، 512،
    768، 1024) لمشاهدة كيف تتغيّر النتائج عند الاكتفاء ببعض الإحداثيات
    من المتّجه فقط.
-4. صفحة `/browse` تعرض النصوص مصنّفةً حسب المجال.
+4. تظهر «خريطة أبعاد الاستعلام» لتوضيح توزيع قوة المتّجه عبر نطاقات
+   الأبعاد المستخدمة.
+5. صفحة `/browse` تعرض النصوص مصنّفةً حسب المجال.
 
 ### من سطر الأوامر
 
@@ -230,13 +232,11 @@ $env:PYTHONIOENCODING="utf-8"; python search.py "ما فوائد القراءة�
 
 ---
 
-## الترخيص والشكر
+## الترخيص
 
 - الترخيص: [MIT](LICENSE)
 - النموذج: [Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B](https://huggingface.co/Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B)
 - النموذج الأساس: `microsoft/harrier-oss-v1-0.6b`
-
-شكرًا لكلّ من يساهم في تطوير معالجة اللغة العربية.
 
 </div>
 
@@ -248,7 +248,8 @@ $env:PYTHONIOENCODING="utf-8"; python search.py "ما فوائد القراءة�
 corpus of ~30 Arabic passages with the Harrier-Arabic-Matryoshka-0.6B
 embedding model and lets you query in Arabic via either a FastAPI web
 UI or a one-shot CLI. The Matryoshka dim toggle (64–1024) re-ranks
-results live without re-running the model.
+results live without re-running the model, and the search page visualizes
+the query vector across dimension buckets.
 
 Quickstart:
 

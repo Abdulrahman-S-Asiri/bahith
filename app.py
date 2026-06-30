@@ -73,13 +73,23 @@ def run_search(request: Request, q: str, dim: int, top_k: int) -> dict:
     top_k = max(1, min(MAX_TOP_K, top_k))
 
     if not q.strip():
-        return {"q": q, "results": [], "elapsed_ms": 0.0, "dim": dim, "top_k": top_k}
+        return {
+            "q": q,
+            "results": [],
+            "embedding": None,
+            "elapsed_ms": 0.0,
+            "dim": dim,
+            "top_k": top_k,
+        }
 
     t0 = time.perf_counter()
-    results = request.app.state.searcher.search(q, top_k=top_k, dim=dim)
+    query_vector = request.app.state.searcher.encode_query(q)
+    results = request.app.state.searcher.search_by_vector(query_vector, top_k=top_k, dim=dim)
+    embedding = request.app.state.searcher.explain_vector(query_vector, dim=dim)
     return {
         "q": q,
         "results": results,
+        "embedding": embedding,
         "elapsed_ms": (time.perf_counter() - t0) * 1000,
         "dim": dim,
         "top_k": top_k,

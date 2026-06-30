@@ -1,0 +1,32 @@
+{% if embedding %}
+<section class="embedding-viz" aria-label="Query embedding visualization">
+  <div class="viz-head">
+    <div>
+      <span class="eyebrow">Vector</span>
+      <h3>خريطة أبعاد الاستعلام</h3>
+    </div>
+    <div class="viz-stats">
+      <span class="la">{{ embedding.dim }} dims</span>
+      <span class="la">norm {{ "%.3f"|format(embedding.norm) }}</span>
+    </div>
+  </div>
+
+  <div class="bars" role="list" aria-label="Dimension magnitude buckets">
+    {% for bucket in embedding.buckets %}
+    <div class="bar-wrap" role="listitem">
+      <div
+        class="bar"
+        style="height: {{ "%.1f"|format(bucket.height) }}%"
+        title="dims {{ bucket.start }}-{{ bucket.end }} · {{ "%.3f"|format(bucket.value) }}">
+      </div>
+      <span class="bar-label la">{{ bucket.start }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <p class="viz-note">
+    كل عمود يجمع نطاقًا من أبعاد متجه الاستعلام بعد الاقتطاع وإعادة التطبيع.
+    ارتفاع العمود يوضح مقدار الإشارة في ذلك النطاق، وليس معنىً لغويًا مباشرًا.
+  </p>
+</section>
+{% endif %}

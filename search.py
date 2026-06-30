@@ -76,6 +76,8 @@ class ArabicSearcher:
     @classmethod
     def _truncate(cls, vec: np.ndarray, dim: int) -> np.ndarray:
         cls._validate_dim(dim)
+        if dim > vec.shape[-1]:
+            raise ValueError(f"cannot truncate {vec.shape[-1]} dimensions to {dim}")
         return cls._normalize(vec[..., :dim])
 
     @staticmethod
@@ -115,6 +117,36 @@ class ArabicSearcher:
         scores = np.clip(self._embeddings_by_dim[dim] @ q_vec, -1.0, 1.0)
         top_idx = np.lexsort((np.arange(len(scores)), -scores))[:limit]
         return [{**self.corpus[i], "score": float(scores[i])} for i in top_idx]
+
+    def explain_vector(
+        self,
+        query_vector: np.ndarray,
+        dim: int = DEFAULT_DIM,
+        buckets: int = 16,
+    ) -> dict:
+        dim = self._validate_dim(dim)
+        q_vec = self._truncate(self._as_vector(query_vector, "query embedding"), dim)
+        parts = np.array_split(q_vec, min(buckets, dim))
+        values = [float(np.linalg.norm(part)) for part in parts]
+        peak = max(values) or 1.0
+        ranges = []
+        start = 1
+        for part, value in zip(parts, values):
+            end = start + len(part) - 1
+            ranges.append(
+                {
+                    "start": start,
+                    "end": end,
+                    "value": value,
+                    "height": (value / peak) * 100,
+                }
+            )
+            start = end + 1
+        return {
+            "dim": dim,
+            "norm": float(np.linalg.norm(q_vec)),
+            "buckets": ranges,
+        }
 
     def search(
         self,

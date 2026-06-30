@@ -402,6 +402,86 @@ nav.primary a.active::after {
   text-align: center;
 }
 
+/* ---------- embedding visualization ---------- */
+.embedding-viz {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--mist);
+}
+.viz-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: start;
+  margin-bottom: 1.25rem;
+}
+.viz-head .eyebrow {
+  font-family: var(--la-display);
+  font-style: italic;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.viz-head h3 {
+  margin: 0.2rem 0 0;
+  font-family: var(--ar-display);
+  font-weight: 400;
+  font-size: 1.35rem;
+  color: var(--emerald-deep);
+}
+.viz-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  color: var(--ash);
+  font-size: 0.82rem;
+}
+.viz-stats span {
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--mist);
+  background: var(--ivory);
+}
+.bars {
+  direction: ltr;
+  display: grid;
+  grid-template-columns: repeat(16, minmax(18px, 1fr));
+  gap: 0.45rem;
+  align-items: end;
+  height: 150px;
+  padding: 1rem 0.75rem 0.5rem;
+  border: 1px solid var(--mist);
+  background: var(--ivory);
+}
+.bar-wrap {
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.35rem;
+}
+.bar {
+  width: 100%;
+  min-height: 3px;
+  background: var(--emerald);
+  border-block-start: 2px solid var(--gold);
+}
+.bar-label {
+  font-size: 0.62rem;
+  color: var(--ash);
+  line-height: 1;
+}
+.viz-note {
+  margin: 1rem 0 0;
+  color: var(--ash);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
 /* ---------- result cards ---------- */
 .results {
   display: flex;
@@ -654,6 +734,12 @@ nav.primary a.active::after {
 /* small screens */
 @media (max-width: 640px) {
   .toolbar { gap: 1rem; }
+  .viz-head { flex-direction: column; }
+  .viz-stats { justify-content: flex-start; }
+  .bars {
+    grid-template-columns: repeat(8, minmax(20px, 1fr));
+    height: 180px;
+  }
   .result { grid-template-columns: auto 1fr; }
   .result .meta { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; text-align: start; }
 }

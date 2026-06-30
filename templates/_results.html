@@ -1,6 +1,7 @@
 {% if not q %}
 <p class="empty">اكتب استعلامًا في الأعلى لبدء البحث.</p>
 {% elif results %}
+{% include "_embedding_viz.html" %}
 <ul class="results">
   {% for r in results %}
   <li class="result">

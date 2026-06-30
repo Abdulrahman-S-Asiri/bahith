@@ -98,6 +98,31 @@ class ArabicSearcherMathTests(unittest.TestCase):
         self.assertEqual(vectors.shape, (2, DEFAULT_DIM))
         self.assertEqual(model.encoded_inputs[-1], ["query", "query"])
 
+    def test_explain_vector_groups_dimension_magnitudes(self) -> None:
+        searcher, _ = self.make_searcher()
+        vector = np.zeros(DEFAULT_DIM, dtype=np.float32)
+        vector[0] = 3.0
+        vector[20] = 4.0
+
+        explanation = searcher.explain_vector(vector, dim=64, buckets=4)
+
+        self.assertEqual(explanation["dim"], 64)
+        self.assertAlmostEqual(explanation["norm"], 1.0)
+        self.assertEqual(
+            [(b["start"], b["end"]) for b in explanation["buckets"]],
+            [(1, 16), (17, 32), (33, 48), (49, 64)],
+        )
+        np.testing.assert_allclose(
+            [b["value"] for b in explanation["buckets"]],
+            [0.6, 0.8, 0.0, 0.0],
+            atol=1e-6,
+        )
+        np.testing.assert_allclose(
+            [b["height"] for b in explanation["buckets"]],
+            [75.0, 100.0, 0.0, 0.0],
+            atol=1e-6,
+        )
+
     def test_search_rejects_bad_query_dimension(self) -> None:
         searcher, _ = self.make_searcher()
 
