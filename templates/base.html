@@ -27,6 +27,7 @@
 
   <main id="main-content">
     <div class="container">
+      {% if public_demo %}<aside class="notice" aria-label="عن التجربة العامة"><strong>باحث V2 · تجربة عامة</strong> — البحث في نصوص تعليمية مضمّنة. رفع الملفات وإدارتها متاحان في النسخة المحلية. قد تُحفظ أسئلتك مؤقتًا لتسريع البحث؛ لا تُدخل معلومات شخصية.</aside>{% endif %}
       {% if message %}<div class="notice notice-success" role="status">{{ message }}</div>{% endif %}
       {% if error %}<div class="notice notice-error" role="alert">{{ error }}</div>{% endif %}
       {% block content %}{% endblock %}

@@ -2,18 +2,18 @@
 {% block title %}الوثائق · باحث{% endblock %}
 {% block content %}
 <header class="page-head page-head-split">
-  <div><p class="eyebrow">مكتبتك</p><h1>الوثائق</h1><p>أضف مصادر قابلة للبحث، ثم افتح كل نتيجة في سياقها.</p></div>
+  <div><p class="eyebrow">{% if public_demo %}المكتبة التجريبية{% else %}مكتبتك{% endif %}</p><h1>الوثائق</h1><p>{% if public_demo %}استعرض المصادر المضمّنة وافتح مقاطعها. لإضافة ملفاتك، شغّل النسخة المحلية من المشروع.{% else %}أضف مصادر قابلة للبحث، ثم افتح كل نتيجة في سياقها.{% endif %}</p></div>
   <span class="count-badge">{{ documents|length }} وثيقة</span>
 </header>
 
-<section class="upload-card" aria-labelledby="upload-title">
+{% if not public_demo %}<section class="upload-card" aria-labelledby="upload-title">
   <div><h2 id="upload-title">إضافة وثيقة</h2><p>ملفات PDF النصية وTXT وMarkdown، حتى 10 ميجابايت. ملفات PDF المصوّرة تحتاج إلى OCR قبل رفعها.</p></div>
   <form action="/documents" method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
     <label class="file-field"><span>الملف</span><input type="file" name="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" required></label>
     <button class="button button-primary" type="submit">رفع الوثيقة</button>
   </form>
-</section>
+</section>{% endif %}
 
 {% if documents %}
 <div class="document-grid">
@@ -29,7 +29,7 @@
     <div class="document-actions">
       <a class="text-link" href="/documents/{{ doc.id }}">استعراض</a>
       <a class="text-link" href="/search?document_id={{ doc.id|urlencode }}">البحث فيها</a>
-      {% if not doc.is_demo %}<details class="document-menu"><summary>إدارة</summary>
+      {% if not public_demo and not doc.is_demo %}<details class="document-menu"><summary>إدارة</summary>
         <form action="/documents/{{ doc.id }}/replace" method="post" enctype="multipart/form-data">
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
           <label class="file-field compact"><span>استبدال الملف</span><input type="file" name="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" required></label>

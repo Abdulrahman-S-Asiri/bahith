@@ -27,14 +27,18 @@
     region.setAttribute("aria-busy", String(isLoading));
   };
 
-  const showError = () => {
+  const showError = (status) => {
     const box = document.createElement("div");
     box.className = "state-card state-error";
     box.setAttribute("role", "alert");
     const heading = document.createElement("h2");
     heading.textContent = "تعذّر إكمال البحث";
     const message = document.createElement("p");
-    message.textContent = "تحقق من الاتصال ثم أعد المحاولة. يمكنك أيضًا إرسال النموذج بالطريقة المعتادة بإعادة تحميل الصفحة.";
+    message.textContent = status === 429
+      ? "التجربة مشغولة الآن أو وصلت إلى حد البحث المؤقت. انتظر قليلًا ثم أعد المحاولة."
+      : status === 503
+        ? "الخدمة غير جاهزة للبحث الآن. قد يستغرق تجهيز النموذج قليلًا؛ أعد المحاولة بعد لحظات."
+        : "تحقق من الاتصال ثم أعد المحاولة. يمكنك أيضًا إرسال النموذج بالطريقة المعتادة بإعادة تحميل الصفحة.";
     box.append(heading, message);
     region.replaceChildren(box);
   };
@@ -52,14 +56,18 @@
         headers: { "X-Requested-With": "fetch" },
         signal: requestController.signal,
       });
-      if (!response.ok) throw new Error(`Search failed: ${response.status}`);
+      if (!response.ok) {
+        const error = new Error(`Search failed: ${response.status}`);
+        error.status = response.status;
+        throw error;
+      }
       const html = await response.text();
       if (controller !== requestController) return;
       region.innerHTML = html;
       if (pushHistory) window.history.pushState({}, "", pageUrl);
       else window.history.replaceState({}, "", pageUrl);
     } catch (error) {
-      if (controller === requestController && error.name !== "AbortError") showError();
+      if (controller === requestController && error.name !== "AbortError") showError(error.status);
     } finally {
       if (controller === requestController) setLoading(false);
     }
