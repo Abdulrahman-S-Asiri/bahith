@@ -19,3 +19,20 @@ jobs:
           HF_HUB_OFFLINE: '1'
           HF_HUB_DISABLE_TELEMETRY: '1'
         run: python -m unittest discover -v
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CPU public demo
+        run: docker build -t bahith-v2 .
+      - name: Start public demo without downloading model for smoke checks
+        run: >-
+          docker run -d --name bahith-smoke -p 127.0.0.1:7860:7860
+          -e BAHITH_ALLOWED_HOSTS=localhost,127.0.0.1
+          -e BAHITH_PRELOAD_MODEL=0 bahith-v2
+      - name: Verify container routes and public boundaries
+        run: python deploy/smoke.py http://127.0.0.1:7860
+      - name: Container diagnostics
+        if: failure()
+        run: docker logs bahith-smoke || true

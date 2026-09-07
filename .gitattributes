@@ -1,1 +1,2 @@
 docs/benchmarks/*.json linguist-generated=true
+*.sh text eol=lf

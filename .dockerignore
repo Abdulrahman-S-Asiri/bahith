@@ -1,0 +1,16 @@
+# Send only files required to run the public application.
+*
+!Dockerfile
+!requirements.txt
+!LICENSE
+!app.py
+!search.py
+!documents.py
+!public_demo.py
+!corpus.json
+!templates/
+!templates/**
+!static/
+!static/**
+!deploy/
+!deploy/start.sh

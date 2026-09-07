@@ -43,7 +43,7 @@
           {% if r.document_id %}<a class="text-link" href="/documents/{{ r.document_id }}/source{% if r.page %}#page={{ r.page }}{% endif %}" target="_blank" rel="noopener">فتح المصدر</a>{% endif %}
         </div>
       </div>
-      {% if r.id is defined and r.id is not none and csrf_token %}
+      {% if r.id is defined and r.id is not none and csrf_token and not public_demo %}
       <form class="feedback" action="/feedback" method="post" aria-label="هل كانت النتيجة مفيدة؟">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <input type="hidden" name="passage_id" value="{{ r.id }}">
