@@ -1,6 +1,7 @@
 """Local Arabic document search. All mutations require a same-origin CSRF token."""
 from __future__ import annotations
 
+import logging
 import os
 import secrets
 import tempfile
@@ -28,6 +29,7 @@ CATEGORY_LABELS_AR = {"religion": "دين", "health": "صحة", "tech": "تقن�
                       "poetry": "شعر", "economy": "اقتصاد", "sports": "رياضة", "education": "تعليم",
                       "culture": "ثقافة", "documents": "مستنداتي"}
 SUGGESTIONS = ["ما فوائد القراءة؟", "كيف يتعلم الذكاء الاصطناعي من البيانات؟", "علاقة جودة النوم بالتركيز"]
+LOGGER = logging.getLogger(__name__)
 
 
 def create_app(data_dir: str | Path | None = None, *, model=None, seed_demo: bool = True,
@@ -167,6 +169,7 @@ def create_app(data_dir: str | Path | None = None, *, model=None, seed_demo: boo
                 state.ready = True
         except (OSError, RuntimeError, ImportError, ValueError) as exc:
             state.readiness_error = type(exc).__name__
+            LOGGER.exception("Bahith model preload failed")
         finally:
             state.readiness_event.set()
             search_gate.release()

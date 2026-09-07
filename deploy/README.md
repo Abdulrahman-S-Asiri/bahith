@@ -38,6 +38,10 @@ Public defaults:
 `/health` is a liveness check. Use `/ready` for readiness; do not announce a working search
 demo until this endpoint returns 200 and a real semantic query succeeds through public HTTPS.
 Keep the host at one worker: the application uses process-local admission and caching.
+Cold startup includes encoding the demo passages and can take several minutes on CPU.
+Configure a bounded startup timeout and restart policy on the selected host; Docker's
+health check alone does not restart an unhealthy container. Preload failures are logged
+for operators, while public readiness responses omit the underlying error details.
 Provider-level request limits and TLS remain necessary. This is a bounded public demo,
 not a multi-user document-management service or a traffic-capacity guarantee.
 

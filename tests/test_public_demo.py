@@ -48,6 +48,11 @@ class BlockingModel(FastModel):
         return super().encode(texts, **kwargs)
 
 
+class FailingModel(FastModel):
+    def encode(self, texts: list[str], **kwargs: object) -> np.ndarray:
+        raise RuntimeError("preload failure")
+
+
 class PublicDemoTests(unittest.TestCase):
     def test_public_mode_uses_an_isolated_demo_store_and_rejects_mutations(self) -> None:
         with tempfile.TemporaryDirectory() as private_directory:
@@ -154,6 +159,18 @@ class PublicDemoTests(unittest.TestCase):
                 self.assertTrue(model.ready.wait(timeout=2))
                 self.assertTrue(app.state.readiness_event.wait(timeout=2))
                 self.assertEqual(client.get("/ready").json(), {"status": "ready"})
+
+    def test_background_preload_failure_is_logged_and_stays_unready(self) -> None:
+        with patch.dict(os.environ, {**PUBLIC_ENV, "BAHITH_PRELOAD_MODEL": "1"}, clear=False):
+            with self.assertLogs("app", level="ERROR") as captured:
+                app = create_app(model=FailingModel())
+                with TestClient(app) as client:
+                    self.assertTrue(app.state.readiness_event.wait(timeout=2))
+                    self.assertEqual(client.get("/ready").status_code, 503)
+
+        self.assertEqual(app.state.readiness_error, "RuntimeError")
+        self.assertEqual(captured.records[0].getMessage(), "Bahith model preload failed")
+        self.assertIsNotNone(captured.records[0].exc_info)
 
     def test_public_security_headers_default_to_no_embedding(self) -> None:
         app = create_app(model=FastModel(), public_demo=True)
