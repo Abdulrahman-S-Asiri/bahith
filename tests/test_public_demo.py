@@ -21,6 +21,7 @@ PUBLIC_ENV = {
     "BAHITH_ALLOWED_HOSTS": "demo.example",
     "BAHITH_ALLOW_HF_EMBED": "0",
 }
+PAGES_ORIGIN = "https://abdulrahman-s-asiri.github.io"
 
 
 class FastModel:
@@ -97,6 +98,56 @@ class PublicDemoTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "exact host names"):
                 create_app(public_demo=True)
 
+    def test_public_cors_allows_only_configured_exact_origin(self) -> None:
+        with patch.dict(os.environ, {"BAHITH_ALLOWED_ORIGINS": PAGES_ORIGIN}, clear=False):
+            app = create_app(model=FastModel(), public_demo=True)
+
+        with TestClient(app) as client:
+            approved = client.get("/api/query", params={"q": "القراءة", "method": "keyword"},
+                                  headers={"Origin": PAGES_ORIGIN})
+            untrusted = client.get("/api/query", params={"q": "القراءة", "method": "keyword"},
+                                   headers={"Origin": "https://attacker.example"})
+            unavailable = client.get("/ready", headers={"Origin": PAGES_ORIGIN})
+            mutation = client.post("/feedback", content=b"must-not-be-parsed",
+                                   headers={"Origin": PAGES_ORIGIN})
+
+        self.assertEqual(approved.status_code, 200)
+        self.assertEqual(approved.headers["access-control-allow-origin"], PAGES_ORIGIN)
+        self.assertNotIn("access-control-allow-credentials", approved.headers)
+        self.assertEqual(untrusted.status_code, 200)
+        self.assertNotIn("access-control-allow-origin", untrusted.headers)
+        self.assertEqual(unavailable.status_code, 503)
+        self.assertEqual(unavailable.headers["access-control-allow-origin"], PAGES_ORIGIN)
+        self.assertEqual(mutation.status_code, 405)
+        self.assertEqual(mutation.headers["access-control-allow-origin"], PAGES_ORIGIN)
+
+    def test_local_mode_never_enables_cors(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.dict(os.environ, {"BAHITH_ALLOWED_ORIGINS": PAGES_ORIGIN}, clear=False):
+                app = create_app(directory, model=FastModel(), seed_demo=False, public_demo=False)
+            with TestClient(app) as client:
+                response = client.get("/health", headers={"Origin": PAGES_ORIGIN})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("access-control-allow-origin", response.headers)
+
+    def test_public_cors_rejects_invalid_origin_settings(self) -> None:
+        invalid_origins = (
+            "http://abdulrahman-s-asiri.github.io",
+            f"{PAGES_ORIGIN}/",
+            f"{PAGES_ORIGIN}/path",
+            "https://abdulrahman-s-asiri.github.io:8443",
+            "https://user@abdulrahman-s-asiri.github.io",
+            f"{PAGES_ORIGIN}?query=yes",
+            f"{PAGES_ORIGIN}#fragment",
+            "https://*.github.io",
+        )
+        for origin in invalid_origins:
+            with self.subTest(origin=origin):
+                with patch.dict(os.environ, {"BAHITH_ALLOWED_ORIGINS": origin}, clear=False):
+                    with self.assertRaisesRegex(ValueError, "exact HTTPS origins"):
+                        create_app(public_demo=True)
+
     def test_public_query_limits_run_before_the_model(self) -> None:
         model = FastModel()
         app = create_app(model=model, public_demo=True)
@@ -110,14 +161,17 @@ class PublicDemoTests(unittest.TestCase):
 
     def test_public_search_gate_rejects_parallel_work_without_queueing(self) -> None:
         model = BlockingModel()
-        app = create_app(model=model, public_demo=True)
+        with patch.dict(os.environ, {"BAHITH_ALLOWED_ORIGINS": PAGES_ORIGIN}, clear=False):
+            app = create_app(model=model, public_demo=True)
         with TestClient(app) as client:
             with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
                 first = executor.submit(client.get, "/api/query", params={"q": "السؤال الأول"})
                 self.assertTrue(model.entered.wait(timeout=2))
-                busy = client.get("/api/query", params={"q": "السؤال الثاني"})
+                busy = client.get("/api/query", params={"q": "السؤال الثاني"},
+                                  headers={"Origin": PAGES_ORIGIN})
                 self.assertEqual(busy.status_code, 429)
                 self.assertEqual(busy.headers["retry-after"], "2")
+                self.assertEqual(busy.headers["access-control-allow-origin"], PAGES_ORIGIN)
                 model.release.set()
                 self.assertEqual(first.result(timeout=3).status_code, 200)
 

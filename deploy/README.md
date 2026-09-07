@@ -1,4 +1,4 @@
-# Public V2 deployment
+# Public demo deployment
 
 The public release is an anonymous, read-only search demo over the bundled educational
 corpus. The local application retains PDF/TXT/Markdown import and library management.
@@ -31,6 +31,10 @@ Public defaults:
 - `BAHITH_PRELOAD_MODEL=1`: prepare the model and passage embeddings before readiness.
 - `OMP_NUM_THREADS=2`, `MKL_NUM_THREADS=2`: bounded CPU parallelism; tune only after measuring.
 - `BAHITH_ALLOWED_HOSTS`: required by the container launcher; use exact hosting names.
+- `BAHITH_ALLOWED_ORIGINS`: comma-separated exact HTTPS origins permitted to read the
+  public API. For GitHub Pages use `https://abdulrahman-s-asiri.github.io` with no path,
+  slash or wildcard. This setting has no effect in local/private mode. The client uses
+  simple GET requests without credentials; public writes remain rejected.
 - `BAHITH_ALLOW_HF_EMBED=1`: optional when using the Hugging Face page wrapper; permits
   only its official frame ancestors. The default denies framing. The assigned direct
   `.hf.space` app URL works without enabling this option.

@@ -16,11 +16,12 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from documents import MAX_UPLOAD_BYTES, DocumentError, DocumentStore
 from public_demo import (MAX_QUERY_BYTES, MAX_QUERY_STRING_BYTES, SEARCH_PATHS, allowed_hosts,
-                         env_flag)
+                         allowed_origins, env_flag)
 from search import (DEFAULT_DIM, DEFAULT_TOP_K, MAX_QUERY_CHARS, MAX_TOP_K, METHODS,
                     MODEL_NAME, MODEL_REVISION, SUPPORTED_DIMS, ArabicSearcher, load_corpus)
 
@@ -386,6 +387,10 @@ def create_app(data_dir: str | Path | None = None, *, model=None, seed_demo: boo
     @application.get("/about", response_class=HTMLResponse)
     def about(request: Request):
         return render(request, "about.html", {"corpus_size": len(request.app.state.store.passages())})
+
+    if public_demo:
+        application.add_middleware(CORSMiddleware, allow_origins=allowed_origins(),
+                                   allow_methods=["GET"], allow_headers=[], allow_credentials=False)
 
     return application
 

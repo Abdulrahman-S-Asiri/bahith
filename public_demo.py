@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import urlsplit
 
 LOCAL_HOSTS = ("localhost", "127.0.0.1", "[::1]", "testserver")
 SEARCH_PATHS = frozenset(("/search", "/api/search", "/api/query"))
@@ -27,3 +28,22 @@ def allowed_hosts() -> list[str]:
            for host in configured):
         raise ValueError("BAHITH_ALLOWED_HOSTS must contain exact host names without schemes, paths, or wildcards")
     return list(dict.fromkeys((*LOCAL_HOSTS, *configured)))
+
+
+def allowed_origins() -> list[str]:
+    configured = [origin.strip() for origin in os.getenv("BAHITH_ALLOWED_ORIGINS", "").split(",")
+                  if origin.strip()]
+    for origin in configured:
+        try:
+            parsed = urlsplit(origin)
+            port = parsed.port
+        except ValueError as exc:
+            raise ValueError("BAHITH_ALLOWED_ORIGINS must contain exact HTTPS origins without ports, "
+                             "paths, credentials, queries, fragments, or wildcards") from exc
+        canonical = f"https://{parsed.hostname}" if parsed.hostname else ""
+        if (origin != canonical or parsed.scheme != "https" or port is not None or parsed.username is not None
+                or parsed.password is not None or parsed.path or parsed.query or parsed.fragment
+                or "*" in origin or any(character.isspace() for character in origin)):
+            raise ValueError("BAHITH_ALLOWED_ORIGINS must contain exact HTTPS origins without ports, "
+                             "paths, credentials, queries, fragments, or wildcards")
+    return list(dict.fromkeys(configured))

@@ -1,5 +1,5 @@
 ---
-title: Bahith V2 | باحث
+title: Bahith | باحث
 emoji: 🔎
 colorFrom: green
 colorTo: yellow
@@ -11,7 +11,7 @@ models:
   - Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B
 ---
 
-# باحث V2
+# باحث
 
 تجربة عامة للبحث الدلالي العربي في مجموعة نصوص تعليمية مضمّنة، بهوية بصرية سعودية.
 يمكنك تجربة السؤال نفسه عبر ستة أحجام من متجهات Matryoshka، ومراجعة المقاطع ومصادرها.
