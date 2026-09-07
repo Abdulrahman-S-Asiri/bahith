@@ -1,50 +1,42 @@
 {% extends "base.html" %}
-{% block title %}باحث · بحث دلالي عربي{% endblock %}
-
+{% block title %}باحث · ابحث في وثائقك العربية{% endblock %}
 {% block content %}
-<section class="hero">
-  <h1><span class="underline">باحث</span></h1>
-  <p class="tagline">Arabic semantic search, powered by Matryoshka embeddings.</p>
-  <p class="ar-tagline">اكتب فكرة، يفهمك المحرّك ويعيد لك أقرب النصوص في معناها — لا في كلماتها.</p>
-
-  <form class="search-shell" action="/search" method="get" role="search">
-    <div class="field">
-      {% include "_search_icon.html" %}
-      <input
-        type="search"
-        name="q"
-        autocomplete="off"
-        autofocus
-        placeholder="اكتب سؤالك أو فكرتك بالعربية..."
-        aria-label="استعلام البحث">
-      <button type="submit" class="submit">Search</button>
-    </div>
-  </form>
-
-  <div class="chips" aria-label="أمثلة على البحث">
-    {% for s in suggestions %}
-      <a class="chip" href="/search?q={{ s|urlencode }}">{{ s }}</a>
-    {% endfor %}
+<section class="home-hero">
+  <div class="hero-copy">
+    <p class="eyebrow">المعرفة تبدأ بسؤال</p>
+    <h1>لكلّ سؤال،<br><span>بابٌ إلى المعرفة.</span></h1>
+    <p class="lead">ابحث بلغتك في وثائقك والنصوص المتاحة، وافتح النتيجة في موضعها من المصدر.</p>
+  </div>
+  <div class="door-art" aria-hidden="true">
+    <div class="door"><b>ب</b><small>ابحث · اقرأ · تحقّق</small></div>
   </div>
 </section>
 
-<div class="star-divider">{% include "_star.html" %}</div>
+<form class="search-shell home-search" action="/search" method="get" role="search">
+  <div class="field">
+    {% include "_search_icon.html" %}
+    <input type="search" name="q" autocomplete="off" placeholder="اكتب سؤالك أو فكرتك بالعربية…" aria-label="استعلام البحث">
+    <button type="submit" class="button button-primary">ابحث</button>
+  </div>
+</form>
 
-<section class="triptych">
-  <article class="step">
-    <div class="num">I.</div>
-    <h3>تضمين</h3>
-    <p>كل نص يتحوّل إلى متّجه من <span class="la">1024</span> بُعدًا يلتقط معناه.</p>
-  </article>
-  <article class="step">
-    <div class="num">II.</div>
-    <h3>اقتطاع</h3>
-    <p>الـ <span class="la">Matryoshka</span> تتيح اختصار المتّجه إلى <span class="la">64</span> بُعدًا فأكثر.</p>
-  </article>
-  <article class="step">
-    <div class="num">III.</div>
-    <h3>ترتيب</h3>
-    <p>تُحسب درجات التشابه بجداء قياسي، فتظهر النتائج الأقرب معنىً للسؤال.</p>
-  </article>
+{% if suggestions %}
+<div class="suggestions" aria-label="استعلامات مقترحة">
+  <span>جرّب:</span>
+  {% for s in suggestions %}<a href="/search?q={{ s|urlencode }}">{{ s }}</a>{% endfor %}
+</div>
+{% endif %}
+
+<section class="value-grid" aria-labelledby="how-title">
+  <div class="section-heading">
+    <p class="eyebrow">من السؤال إلى المصدر</p>
+    <h2 id="how-title">بحث يساعدك على القراءة</h2>
+  </div>
+  <div class="three-columns">
+    <article class="plain-card"><span class="card-number">١</span><h3>أضف وثيقتك</h3><p>ارفع الملف ليُقسّم إلى مقاطع قابلة للبحث مع حفظ مرجع الصفحة.</p></article>
+    <article class="plain-card"><span class="card-number">٢</span><h3>اختر طريقة البحث</h3><p>استخدم البحث الدلالي أو الكلمي أو المدمج بحسب نوع سؤالك.</p></article>
+    <article class="plain-card"><span class="card-number">٣</span><h3>ارجع إلى الأصل</h3><p>تعرّف على الوثيقة والصفحة وراء كل نتيجة قبل الاعتماد عليها.</p></article>
+  </div>
+  <div class="section-actions"><a class="button button-secondary" href="/documents">إدارة الوثائق</a><a class="text-link" href="/about">كيف يعمل باحث؟</a></div>
 </section>
 {% endblock %}

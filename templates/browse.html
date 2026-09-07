@@ -1,19 +1,12 @@
 {% extends "base.html" %}
 {% block title %}التصفح · باحث{% endblock %}
-
 {% block content %}
-<header class="page-head">
-  <span class="eyebrow">Browse</span>
-  <h2>تصفّح المجموعة</h2>
-  <p class="subtitle">a curated Arabic corpus, organised by theme</p>
-</header>
-
-<div class="cat-grid">
+<header class="page-head"><p class="eyebrow">المجموعة العامة</p><h1>تصفّح النصوص</h1><p>استكشف المجموعة التجريبية بحسب التصنيف. تظهر وثائقك المرفوعة في صفحة الوثائق.</p></header>
+{% if categories %}
+<div class="category-grid">
   {% for cat in categories %}
-  <a class="cat-tile" href="/browse/{{ cat.name }}">
-    <div class="name">{{ cat.label_ar }}</div>
-    <div class="count"><span class="la">{{ cat.count }}</span> نصوص</div>
-  </a>
+  <a class="category-card" href="/browse/{{ cat.name|urlencode }}"><span class="category-mark" aria-hidden="true">ب</span><h2>{{ cat.label_ar }}</h2><p>{{ cat.count }} نصًا</p><span class="text-link">عرض النصوص</span></a>
   {% endfor %}
 </div>
+{% else %}<div class="state-card"><h2>لا توجد تصنيفات بعد</h2><p>يمكنك إضافة وثيقة والبحث فيها من صفحة الوثائق.</p></div>{% endif %}
 {% endblock %}

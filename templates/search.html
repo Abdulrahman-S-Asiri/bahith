@@ -1,65 +1,62 @@
 {% extends "base.html" %}
 {% block title %}{% if q %}{{ q }} · {% endif %}البحث · باحث{% endblock %}
-
 {% block content %}
-<header class="page-head">
-  <span class="eyebrow">Search</span>
-  <h2>البحث الدلالي</h2>
-  <p class="subtitle">a query in Arabic, ranked by meaning</p>
+<header class="page-head page-head-split">
+  <div><p class="eyebrow">بحث موثّق</p><h1>ابحث في النصوص</h1><p>غيّر طريقة البحث أو حجم المتجه من الخيارات المتقدمة.</p></div>
+  <a class="button button-secondary" href="/documents">الوثائق</a>
 </header>
 
-<form
-  class="search-shell"
-  hx-get="/api/search"
-  hx-target="#results-region"
-  hx-swap="innerHTML"
-  hx-trigger="submit, change from:.dim-pills, change from:[name=top_k], keyup changed delay:400ms from:[name=q]"
-  hx-push-url="true"
-  hx-include="this"
-  action="/search"
-  method="get">
+<form class="search-shell search-page-form" data-search-form action="/search" method="get" role="search">
   <div class="field">
     {% include "_search_icon.html" %}
-    <input
-      type="search"
-      name="q"
-      autocomplete="off"
-      autofocus
-      placeholder="اكتب سؤالك أو فكرتك بالعربية..."
-      value="{{ q or '' }}"
-      aria-label="استعلام البحث">
-    <button type="submit" class="submit">Search</button>
+    <input type="search" name="q" autocomplete="off" placeholder="اكتب سؤالك أو فكرتك بالعربية…" value="{{ q or '' }}" aria-label="استعلام البحث">
+    <button type="submit" class="button button-primary">ابحث</button>
   </div>
 
-  <div class="toolbar">
-    <div class="group">
-      <span class="label">Dim</span>
-      <div class="dim-pills" role="radiogroup" aria-label="Embedding dimension">
-        {% for d in supported_dims %}
-        <input
-          type="radio"
-          name="dim"
-          id="dim-{{ d }}"
-          value="{{ d }}"
-          {% if d == dim %}checked{% endif %}>
-        <label for="dim-{{ d }}">{{ d }}</label>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div class="group">
-      <span class="label">Top&nbsp;K</span>
-      <div class="stepper" data-stepper data-min="1" data-max="10">
-        <button type="button" data-step="-1" aria-label="نقص">−</button>
-        <output>{{ top_k }}</output>
-        <button type="button" data-step="1" aria-label="زد">+</button>
-        <input type="hidden" name="top_k" value="{{ top_k }}">
-      </div>
-    </div>
+  <div class="search-basics">
+    <label>طريقة البحث
+      <select name="method">
+        <option value="semantic" {% if method == 'semantic' %}selected{% endif %}>دلالي</option>
+        <option value="keyword" {% if method == 'keyword' %}selected{% endif %}>كلمي</option>
+        <option value="hybrid" {% if method == 'hybrid' %}selected{% endif %}>مدمج</option>
+        <option value="cascade" {% if method == 'cascade' %}selected{% endif %}>متدرّج</option>
+      </select>
+    </label>
+    <label>نطاق البحث
+      <select name="document_id">
+        <option value="">كل النصوص</option>
+        {% for doc in documents %}<option value="{{ doc.id }}" {% if document_id|string == doc.id|string %}selected{% endif %}>{{ doc.title }}</option>{% endfor %}
+      </select>
+    </label>
   </div>
+
+  <details class="advanced">
+    <summary>خيارات Matryoshka المتقدمة</summary>
+    <div class="advanced-grid">
+      <fieldset>
+        <legend>أبعاد المتجه</legend>
+        <div class="dim-pills">
+          {% for d in supported_dims %}
+          <input type="radio" name="dim" id="dim-{{ d }}" value="{{ d }}" {% if d == dim %}checked{% endif %}>
+          <label for="dim-{{ d }}">{{ d }}</label>
+          {% endfor %}
+        </div>
+      </fieldset>
+      <label>عدد النتائج
+        <select name="top_k">
+          {% for k in range(1, 11) %}<option value="{{ k }}" {% if k == top_k %}selected{% endif %}>{{ k }}</option>{% endfor %}
+        </select>
+      </label>
+    </div>
+    <dl class="method-help">
+      <div><dt>دلالي</dt><dd>يرتّب المقاطع حسب قرب متجهاتها من معنى الاستعلام.</dd></div>
+      <div><dt>كلمي</dt><dd>يفضّل التطابق المباشر مع الكلمات والعبارات.</dd></div>
+      <div><dt>مدمج</dt><dd>يجمع إشارات البحث الدلالي والكلمي في ترتيب واحد.</dd></div>
+      <div><dt>متدرّج</dt><dd>ينتقي مرشحين بالحجم المحدد ثم يعيد ترتيبهم بالمتجه الكامل.</dd></div>
+    </dl>
+  </details>
 </form>
 
-<section id="results-region">
-  {% include "_results.html" %}
-</section>
+<div class="loading" data-search-loading hidden role="status">جارٍ البحث…</div>
+<section id="results-region" aria-live="polite" aria-busy="false">{% include "_results.html" %}</section>
 {% endblock %}

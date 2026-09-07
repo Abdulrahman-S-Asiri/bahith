@@ -37,3 +37,12 @@ ARABIC_TRAINING_GUIDE.local.md
 # Test artifacts
 smoke.log
 install.log
+
+# Local documents, original files, embeddings, and user feedback
+.bahith/
+evaluation-results/
+*.sqlite3
+*.sqlite3-journal
+
+# Browser test output
+test-results/

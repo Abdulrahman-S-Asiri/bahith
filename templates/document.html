@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ document.title }} · باحث{% endblock %}
+{% block content %}
+<nav class="breadcrumb" aria-label="مسار الصفحة"><a href="/documents">الوثائق</a><span aria-hidden="true">←</span><span>{{ document.title }}</span></nav>
+<header class="page-head page-head-split document-heading">
+  <div><p class="eyebrow">وثيقة{% if document.is_demo %} · مثال مضمّن{% endif %}</p><h1>{{ document.title }}</h1><p>{{ document.filename }}</p><div class="document-meta"><span>{{ document.page_count }} صفحة</span><span>{{ passages|length }} مقطعًا</span>{% if document.created_at %}<time datetime="{{ document.created_at }}">{{ document.created_at[:10] }}</time>{% endif %}</div></div>
+  <div class="stack-actions"><a class="button button-primary" href="/search?document_id={{ document.id|urlencode }}">ابحث في الوثيقة</a><a class="button button-secondary" href="/documents/{{ document.id }}/source" target="_blank" rel="noopener">افتح الملف الأصلي</a></div>
+</header>
+
+<section aria-labelledby="passages-title"><div class="section-heading"><p class="eyebrow">النص المفهرس</p><h2 id="passages-title">مقاطع الوثيقة</h2></div>
+  <ol class="passage-list">
+    {% for passage in passages %}
+    <li><span class="passage-number">{{ passage.ordinal }}</span><div><div class="passage-meta">{% if passage.page %}<span>الصفحة {{ passage.page }}</span>{% endif %}</div><p>{{ passage.text }}</p><div class="inline-actions"><a class="text-link" href="/passages/{{ passage.id }}">عرض المقطع</a><a class="text-link" href="/documents/{{ document.id }}/source{% if passage.page %}#page={{ passage.page }}{% endif %}" target="_blank" rel="noopener">فتح المصدر</a></div></div></li>
+    {% else %}<li class="state-card">لم تُستخرج مقاطع من هذه الوثيقة.</li>{% endfor %}
+  </ol>
+</section>
+{% endblock %}

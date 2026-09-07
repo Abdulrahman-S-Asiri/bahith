@@ -1,29 +1,66 @@
-{% if not q %}
-<p class="empty">اكتب استعلامًا في الأعلى لبدء البحث.</p>
+{% if error %}
+<div class="state-card state-error" role="alert"><h2>تعذّر إكمال البحث</h2><p>{{ error }}</p></div>
+{% elif not q %}
+<div class="state-card"><h2>ابدأ بسؤال</h2><p>اكتب استعلامًا في الأعلى، ثم اختر نطاق البحث إن أردت قصر النتائج على وثيقة واحدة.</p></div>
+{% elif status == 'no-index' %}
+<div class="state-card"><h2>لا يوجد فهرس قابل للبحث</h2><p>أضف وثيقة أولًا، أو اختر كل النصوص إذا كانت المجموعة التجريبية متاحة.</p><a class="button button-secondary" href="/documents">أضف وثيقة</a></div>
 {% elif results %}
+<div class="results-heading">
+  <div><p class="eyebrow">النتائج</p><h2>أقرب المقاطع إلى سؤالك</h2></div>
+  <p class="results-meta"><span>{{ results|length }} نتائج</span><span>{{ corpus_size }} مقطعًا في النطاق</span><span>{{ dim }} بُعدًا</span>{% if elapsed_ms is not none %}<span class="ltr">{{ "%.1f"|format(elapsed_ms) }} ms</span>{% endif %}{% if query_cached %}<span>أُعيد استخدام متجه الاستعلام</span>{% endif %}</p>
+</div>
+<p class="ranking-note">
+  {% if method == 'keyword' %}الدرجات تقيس التطابق الكلمي داخل هذا النطاق.
+  {% elif method == 'hybrid' %}درجات الترتيب المدمج تجمع إشارات دلالية وكلمية ولا تمثل نسبة ثقة.
+  {% else %}درجات التشابه ترتّب القرب المتجهي داخل هذا النطاق ولا تمثل نسبة ثقة أو حكمًا على صحة النص.
+  {% endif %}
+</p>
+
 {% include "_embedding_viz.html" %}
-<ul class="results">
+
+<ol class="results">
   {% for r in results %}
-  <li class="result">
-    <div class="rank">
-      {% include "_star.html" %}
-      <span class="la">{{ loop.index }}</span>
-    </div>
-    <div class="body">{{ r.text }}</div>
-    <div class="meta">
-      <span class="score la">{{ "%.3f"|format(r.score) }}</span>
-      <span class="category">{{ r.category }}</span>
-    </div>
+  <li class="result-card">
+    <div class="result-order" aria-label="النتيجة {{ loop.index }}">{{ loop.index }}</div>
+    <article>
+      <div class="result-topline">
+        <span class="source-name">{{ r.source_title or r.category or 'المجموعة التجريبية' }}</span>
+        {% if method == 'hybrid' %}<span class="score"><span>درجة الترتيب</span> <b class="ltr">{{ "%.3f"|format(r.score) }}</b></span>
+        {% elif method == 'keyword' %}<span class="score"><span>درجة التطابق</span> <b class="ltr">{{ "%.3f"|format(r.score) }}</b></span>
+        {% else %}<span class="score"><span>درجة التشابه</span> <b class="ltr">{{ "%.3f"|format(r.score) }}</b></span>{% endif %}
+      </div>
+      <p class="result-text">{{ r.text }}</p>
+      <div class="result-source">
+        <div>
+          {% if r.is_demo %}<span class="demo-badge">مثال مضمّن</span>{% endif %}
+          {% if r.filename %}<span>{{ r.filename }}</span>{% endif %}
+          {% if r.page %}<span>الصفحة {{ r.page }}</span>{% endif %}
+          {% if r.ordinal is defined and r.ordinal is not none %}<span>المقطع {{ r.ordinal }}</span>{% endif %}
+          {% if r.category and not r.source_title %}<span>{{ r.category }}</span>{% endif %}
+        </div>
+        <div class="result-links">
+          {% if r.id is defined and r.id is not none %}<a class="text-link" href="/passages/{{ r.id }}">عرض المقطع</a>{% endif %}
+          {% if r.document_id %}<a class="text-link" href="/documents/{{ r.document_id }}/source{% if r.page %}#page={{ r.page }}{% endif %}" target="_blank" rel="noopener">فتح المصدر</a>{% endif %}
+        </div>
+      </div>
+      {% if r.id is defined and r.id is not none and csrf_token %}
+      <form class="feedback" action="/feedback" method="post" aria-label="هل كانت النتيجة مفيدة؟">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="passage_id" value="{{ r.id }}">
+        <input type="hidden" name="query" value="{{ q }}">
+        <input type="hidden" name="method" value="{{ method }}">
+        <input type="hidden" name="dim" value="{{ dim }}">
+        <input type="hidden" name="document_id" value="{{ document_id }}">
+        <input type="hidden" name="top_k" value="{{ top_k }}">
+        <span>هل أفادتك؟</span>
+        <button type="submit" name="helpful" value="yes">نعم</button>
+        <button type="submit" name="helpful" value="no">لا</button>
+      </form>
+      {% endif %}
+    </article>
   </li>
   {% endfor %}
-</ul>
-<p class="results-meta">
-  <span class="la">⏱ {{ "%.1f"|format(elapsed_ms) }} ms</span>
-  &nbsp;&middot;&nbsp;
-  <span class="la">{{ corpus_size }}</span> نصًا
-  &nbsp;&middot;&nbsp;
-  <span class="la">dim&nbsp;=&nbsp;{{ dim }}</span>
-</p>
+</ol>
 {% else %}
-<p class="empty">لا توجد نتائج.</p>
+<div class="state-card"><h2>لا توجد نتائج</h2><p>جرّب كلمات أخرى، أو وسّع نطاق البحث إلى كل النصوص، أو اختر طريقة بحث مختلفة.</p></div>
 {% endif %}

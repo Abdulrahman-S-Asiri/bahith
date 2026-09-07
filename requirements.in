@@ -1,0 +1,14 @@
+# Direct dependencies. requirements.txt records the complete tested environment.
+sentence-transformers==6.0.1
+numpy==2.4.6
+torch==2.14.0
+einops==0.8.2
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+jinja2==3.1.6
+python-multipart==0.0.32
+pypdf==6.17.0
+
+# Test client and runner (also used by CI)
+httpx==0.28.1
+pytest==9.1.1

@@ -1,23 +1,11 @@
 {% extends "base.html" %}
 {% block title %}{{ label_ar }} · التصفح · باحث{% endblock %}
-
 {% block content %}
-<header class="page-head">
-  <span class="eyebrow">{{ category|title }}</span>
-  <h2>{{ label_ar }}</h2>
-  <p class="subtitle"><span class="la">{{ entries|length }}</span> entries</p>
-</header>
-
-<nav class="breadcrumb">
-  <a href="/browse">التصفح</a><span class="sep">›</span>{{ label_ar }}
-</nav>
-
-<ul class="entries">
+<nav class="breadcrumb" aria-label="مسار الصفحة"><a href="/browse">التصفح</a><span aria-hidden="true">←</span><span>{{ label_ar }}</span></nav>
+<header class="page-head page-head-compact"><p class="eyebrow">{{ category }}</p><h1>{{ label_ar }}</h1><p>{{ entries|length }} نصًا في المجموعة التجريبية</p></header>
+<ol class="passage-list">
   {% for e in entries %}
-  <li>
-    <span class="num la">{{ loop.index }}</span>
-    <span>{{ e.text }}</span>
-  </li>
-  {% endfor %}
-</ul>
+  <li><span class="passage-number">{{ loop.index }}</span><div><p>{{ e.text }}</p>{% if e.id is defined and e.id is not none %}<a class="text-link" href="/passages/{{ e.id }}">عرض المقطع</a>{% endif %}</div></li>
+  {% else %}<li class="state-card">لا توجد نصوص في هذا التصنيف.</li>{% endfor %}
+</ol>
 {% endblock %}

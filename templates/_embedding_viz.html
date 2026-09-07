@@ -1,32 +1,14 @@
 {% if embedding %}
-<section class="embedding-viz" aria-label="Query embedding visualization">
+<details class="embedding-viz">
+  <summary>عرض التوزيع الرقمي لمتجه الاستعلام</summary>
   <div class="viz-head">
-    <div>
-      <span class="eyebrow">Vector</span>
-      <h3>خريطة أبعاد الاستعلام</h3>
-    </div>
-    <div class="viz-stats">
-      <span class="la">{{ embedding.dim }} dims</span>
-      <span class="la">norm {{ "%.3f"|format(embedding.norm) }}</span>
-    </div>
+    <p><span>{{ embedding.dim }}</span> بُعدًا · معيار المتجه <span class="ltr">{{ "%.3f"|format(embedding.norm) }}</span></p>
   </div>
-
-  <div class="bars" role="list" aria-label="Dimension magnitude buckets">
+  <div class="bars" role="img" aria-label="توزيع مقادير متجه الاستعلام على مجموعات من الأبعاد">
     {% for bucket in embedding.buckets %}
-    <div class="bar-wrap" role="listitem">
-      <div
-        class="bar"
-        style="height: {{ "%.1f"|format(bucket.height) }}%"
-        title="dims {{ bucket.start }}-{{ bucket.end }} · {{ "%.3f"|format(bucket.value) }}">
-      </div>
-      <span class="bar-label la">{{ bucket.start }}</span>
-    </div>
+    <div class="bar-wrap"><div class="bar" style="height: {{ "%.1f"|format(bucket.height) }}%" title="الأبعاد {{ bucket.start }}–{{ bucket.end }}، القيمة {{ "%.3f"|format(bucket.value) }}"></div><span class="ltr">{{ bucket.start }}</span></div>
     {% endfor %}
   </div>
-
-  <p class="viz-note">
-    كل عمود يجمع نطاقًا من أبعاد متجه الاستعلام بعد الاقتطاع وإعادة التطبيع.
-    ارتفاع العمود يوضح مقدار الإشارة في ذلك النطاق، وليس معنىً لغويًا مباشرًا.
-  </p>
-</section>
+  <p class="viz-note">يعرض الرسم توزيعًا عدديًا لمقادير المتجه بعد الاقتطاع وإعادة التطبيع. الأعمدة لا تشرح معنى كلمات أو مفاهيم بعينها.</p>
+</details>
 {% endif %}
