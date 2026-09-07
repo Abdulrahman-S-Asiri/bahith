@@ -19,6 +19,10 @@ jobs:
           HF_HUB_OFFLINE: '1'
           HF_HUB_DISABLE_TELEMETRY: '1'
         run: python -m unittest discover -v
+      - name: Verify the GitHub Pages client and export
+        run: |
+          node --check static/js/pages.js
+          python deploy/export_pages.py dist/github-pages --base-path /bahith/
   container:
     runs-on: ubuntu-latest
     timeout-minutes: 20
