@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}مقطع من {{ document.title }} · باحث{% endblock %}
+{% block content %}
+<nav class="breadcrumb" aria-label="مسار الصفحة"><a href="/documents">الوثائق</a><span aria-hidden="true">←</span><a href="/documents/{{ document.id }}">{{ document.title }}</a><span aria-hidden="true">←</span><span>المقطع {{ passage.ordinal }}</span></nav>
+
+<article class="passage-detail">
+  <header><p class="eyebrow">{{ document.title }}</p><h1>المقطع {{ passage.ordinal }}</h1><div class="passage-meta">{% if passage.page %}<span>الصفحة {{ passage.page }}</span>{% endif %}<span>{{ document.filename }}</span></div></header>
+  <blockquote>{{ passage.text }}</blockquote>
+  <div class="section-actions"><a class="button button-primary" href="/documents/{{ document.id }}/source{% if passage.page %}#page={{ passage.page }}{% endif %}" target="_blank" rel="noopener">فتح الصفحة في المصدر</a><a class="button button-secondary" href="/search?document_id={{ document.id|urlencode }}">ابحث في الوثيقة</a></div>
+</article>
+
+<nav class="passage-navigation" aria-label="التنقل بين المقاطع">
+  {% if previous %}<a href="/passages/{{ previous.id }}"><span>المقطع السابق</span><strong>{{ previous.ordinal }}</strong></a>{% else %}<span></span>{% endif %}
+  {% if next %}<a href="/passages/{{ next.id }}"><span>المقطع التالي</span><strong>{{ next.ordinal }}</strong></a>{% endif %}
+</nav>
+{% endblock %}

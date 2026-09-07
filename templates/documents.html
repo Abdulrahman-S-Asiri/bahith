@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}الوثائق · باحث{% endblock %}
+{% block content %}
+<header class="page-head page-head-split">
+  <div><p class="eyebrow">مكتبتك</p><h1>الوثائق</h1><p>أضف مصادر قابلة للبحث، ثم افتح كل نتيجة في سياقها.</p></div>
+  <span class="count-badge">{{ documents|length }} وثيقة</span>
+</header>
+
+<section class="upload-card" aria-labelledby="upload-title">
+  <div><h2 id="upload-title">إضافة وثيقة</h2><p>ملفات PDF النصية وTXT وMarkdown، حتى 10 ميجابايت. ملفات PDF المصوّرة تحتاج إلى OCR قبل رفعها.</p></div>
+  <form action="/documents" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label class="file-field"><span>الملف</span><input type="file" name="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" required></label>
+    <button class="button button-primary" type="submit">رفع الوثيقة</button>
+  </form>
+</section>
+
+{% if documents %}
+<div class="document-grid">
+  {% for doc in documents %}
+  <article class="document-card">
+    <div class="document-icon" aria-hidden="true">و</div>
+    <div class="document-main">
+      <h2><a href="/documents/{{ doc.id }}">{{ doc.title }}</a></h2>
+      {% if doc.is_demo %}<span class="demo-badge">مجموعة تجريبية مضمّنة</span>{% endif %}
+      <p class="filename">{{ doc.filename }}</p>
+      <div class="document-meta"><span>{{ doc.page_count }} صفحة</span><span>{{ doc.passage_count }} مقطعًا</span>{% if doc.created_at %}<time datetime="{{ doc.created_at }}">{{ doc.created_at[:10] }}</time>{% endif %}</div>
+    </div>
+    <div class="document-actions">
+      <a class="text-link" href="/documents/{{ doc.id }}">استعراض</a>
+      <a class="text-link" href="/search?document_id={{ doc.id|urlencode }}">البحث فيها</a>
+      {% if not doc.is_demo %}<details class="document-menu"><summary>إدارة</summary>
+        <form action="/documents/{{ doc.id }}/replace" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <label class="file-field compact"><span>استبدال الملف</span><input type="file" name="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" required></label>
+          <button class="button button-secondary" type="submit">استبدال</button>
+        </form>
+        <form action="/documents/{{ doc.id }}/delete" method="post" data-confirm="حذف الوثيقة «{{ doc.title }}» ومقاطعها؟">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="button button-danger" type="submit">حذف الوثيقة</button>
+        </form>
+      </details>{% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="state-card"><h2>مكتبتك فارغة</h2><p>ارفع أول وثيقة من النموذج أعلاه، أو تصفّح المجموعة العامة المضمّنة.</p><a class="text-link" href="/browse">تصفّح المجموعة العامة</a></div>
+{% endif %}
+{% endblock %}

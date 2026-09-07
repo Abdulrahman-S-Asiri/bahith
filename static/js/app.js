@@ -1,40 +1,78 @@
-// باحث — minimal frontend enhancements
 (() => {
-  // Highlight current nav item
-  const path = window.location.pathname;
-  document.querySelectorAll('nav.primary a').forEach((a) => {
-    const href = a.getAttribute('href');
-    if (href === '/' ? path === '/' : path.startsWith(href)) {
-      a.classList.add('active');
+  const currentPath = window.location.pathname;
+  document.querySelectorAll("nav.primary a").forEach((link) => {
+    const href = link.getAttribute("href");
+    const active = href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+    if (active) {
+      link.classList.add("active");
+      link.setAttribute("aria-current", "page");
     }
   });
 
-  // Top-K stepper widget
-  document.querySelectorAll('[data-stepper]').forEach((el) => {
-    const out = el.querySelector('output');
-    const input = el.querySelector('input[type=hidden]');
-    const min = Number(el.dataset.min || 1);
-    const max = Number(el.dataset.max || 10);
-    const set = (v) => {
-      const n = Math.max(min, Math.min(max, v));
-      out.value = n;
-      input.value = n;
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-    };
-    el.querySelector('[data-step="-1"]').addEventListener('click', () => set(Number(out.value) - 1));
-    el.querySelector('[data-step="1"]').addEventListener('click',  () => set(Number(out.value) + 1));
+  document.querySelectorAll("form[data-confirm]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+    });
   });
 
-  // Dim pill toggle visual state (radios already handle it via CSS,
-  // but we keep an explicit class for nicer focus visuals)
-  document.querySelectorAll('.dim-pills').forEach((g) => {
-    const sync = () => {
-      g.querySelectorAll('label').forEach((l) => {
-        const r = document.getElementById(l.getAttribute('for'));
-        l.classList.toggle('active', r && r.checked);
+  const form = document.querySelector("[data-search-form]");
+  const region = document.querySelector("#results-region");
+  const loading = document.querySelector("[data-search-loading]");
+  if (!form || !region || !loading || !window.fetch || !window.AbortController) return;
+
+  let controller;
+
+  const setLoading = (isLoading) => {
+    loading.hidden = !isLoading;
+    region.setAttribute("aria-busy", String(isLoading));
+  };
+
+  const showError = () => {
+    const box = document.createElement("div");
+    box.className = "state-card state-error";
+    box.setAttribute("role", "alert");
+    const heading = document.createElement("h2");
+    heading.textContent = "تعذّر إكمال البحث";
+    const message = document.createElement("p");
+    message.textContent = "تحقق من الاتصال ثم أعد المحاولة. يمكنك أيضًا إرسال النموذج بالطريقة المعتادة بإعادة تحميل الصفحة.";
+    box.append(heading, message);
+    region.replaceChildren(box);
+  };
+
+  const runSearch = async (pushHistory = true) => {
+    if (controller) controller.abort();
+    const requestController = new AbortController();
+    controller = requestController;
+    const params = new URLSearchParams(new FormData(form));
+    const pageUrl = `${form.action}?${params.toString()}`;
+    setLoading(true);
+
+    try {
+      const response = await fetch(`/api/search?${params.toString()}`, {
+        headers: { "X-Requested-With": "fetch" },
+        signal: requestController.signal,
       });
-    };
-    g.addEventListener('change', sync);
-    sync();
+      if (!response.ok) throw new Error(`Search failed: ${response.status}`);
+      const html = await response.text();
+      if (controller !== requestController) return;
+      region.innerHTML = html;
+      if (pushHistory) window.history.pushState({}, "", pageUrl);
+      else window.history.replaceState({}, "", pageUrl);
+    } catch (error) {
+      if (controller === requestController && error.name !== "AbortError") showError();
+    } finally {
+      if (controller === requestController) setLoading(false);
+    }
+  };
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    runSearch();
   });
+
+  form.addEventListener("change", (event) => {
+    if (event.target.matches("select, input[type='radio']")) runSearch(false);
+  });
+
+  window.addEventListener("popstate", () => window.location.reload());
 })();

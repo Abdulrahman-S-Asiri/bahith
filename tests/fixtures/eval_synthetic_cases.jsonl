@@ -1,0 +1,25 @@
+{"_meta":{"name":"bahith-small-synthetic-arabic-v1","language_notes":["Modern Standard Arabic","Saudi colloquial prompts"],"synthetic":true,"evidence_scope":"TEST_FIXTURE_ONLY","human_review":{"status":"UNREVIEWED"},"warning":"Authored synthetic fixture; not independent production evidence."}}
+{"id":"q01","query":"كيف أروح من الياسمين لمحطة القطار بالباص؟","relevant_ids":[101],"tier":"saudi_colloquial","category":"transport","split":"development"}
+{"id":"q02","query":"ما أثر المشي المنتظم في القلب والضغط؟","relevant_ids":[102],"tier":"fusha","category":"health","split":"test"}
+{"id":"q03","query":"وش الجامعة اللي أعلنت منحة للحاسب؟","relevant_ids":[103],"tier":"saudi_colloquial","category":"education","split":"calibration"}
+{"id":"q04","query":"من صممت أداة تفريغ الصوت العربي لخدمة ضعاف السمع؟","relevant_ids":[104],"tier":"names","category":"technology","split":"test"}
+{"id":"q05","query":"هل يتوقع مطر قوي على جدة الخميس؟","relevant_ids":[105],"tier":"fusha","category":"weather","split":"development"}
+{"id":"q06","query":"متى يبدأ معرض الكتب في الظهران؟","relevant_ids":[106],"tier":"fusha","category":"culture","split":"test"}
+{"id":"q07","query":"البنك زاد سقف الحوالات اليومية لمين؟","relevant_ids":[107],"tier":"saudi_colloquial","category":"finance","split":"calibration"}
+{"id":"q08","query":"أي منشأة تنتج طاقة نظيفة من ضوء الشمس في الجوف؟","relevant_ids":[108],"tier":"paraphrase","category":"energy","split":"test"}
+{"id":"q09","query":"مين سجل هدفي الهلال ضد الاتحاد؟","relevant_ids":[109],"tier":"names","category":"sports","split":"development"}
+{"id":"q10","query":"من وين تمر السكري المعروض؟","relevant_ids":[110],"tier":"saudi_colloquial","category":"food","split":"test"}
+{"id":"q11","query":"ما خطوات تجديد جواز السفر عبر الإنترنت؟","relevant_ids":[111],"tier":"fusha","category":"public_services","split":"calibration"}
+{"id":"q12","query":"ماذا اكتشف فريق ريم قرب فرسان؟","relevant_ids":[112],"tier":"names","category":"science","split":"test"}
+{"id":"q13","query":"وش الأوراق المطلوبة لدعم المتعثر في الإيجار؟","relevant_ids":[113],"tier":"saudi_colloquial","category":"housing","split":"development"}
+{"id":"q14","query":"هل يجب أن يظهر السعر النهائي شاملا الضريبة؟","relevant_ids":[114],"tier":"fusha","category":"commerce","split":"test"}
+{"id":"q15","query":"كيف عالج المتطوعون تدهور الغطاء النباتي في العلا؟","relevant_ids":[115],"tier":"paraphrase","category":"environment","split":"calibration"}
+{"id":"q16","query":"من أضاف للخرائط ميزة العمل بدون نت؟","relevant_ids":[116],"tier":"names","category":"technology","split":"test"}
+{"id":"q17","query":"خدمة نقل عام تصل شمال الرياض بالقطار","relevant_ids":[101],"tier":"paraphrase","category":"transport","split":"test"}
+{"id":"q18","query":"برنامج جامعي يكافئ التفوق في البرمجة","relevant_ids":[103],"tier":"paraphrase","category":"education","split":"development"}
+{"id":"q19","query":"طريقة حكومية تختصر مراجعة مكتب الجوازات","relevant_ids":[111],"tier":"paraphrase","category":"public_services","split":"test"}
+{"id":"q20","query":"مشروع يواجه زحف الرمال بزراعة نبات محلي","relevant_ids":[115],"tier":"paraphrase","category":"environment","split":"calibration"}
+{"id":"q21","query":"كم سعر تذكرة القطار من الرياض إلى مكة؟","relevant_ids":[],"no_answer":true,"tier":"no_answer","category":"transport","split":"test"}
+{"id":"q22","query":"وين أقرب صيدلية مناوبة في تبوك؟","relevant_ids":[],"no_answer":true,"tier":"no_answer","category":"health","split":"development"}
+{"id":"q23","query":"من فاز بجائزة الرواية العربية هذا العام؟","relevant_ids":[],"no_answer":true,"tier":"no_answer","category":"culture","split":"test"}
+{"id":"q24","query":"هل السوق يفتح يوم الجمعة؟","relevant_ids":[],"no_answer":true,"tier":"no_answer","category":"commerce","split":"calibration"}
