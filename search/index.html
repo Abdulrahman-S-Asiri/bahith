@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>البحث · باحث</title>
+  <meta name="description" content="باحث: بحث دلالي وكلمي في الوثائق العربية مع إظهار المصدر.">
+  <link rel="stylesheet" href="/bahith/static/css/style.css">
+  <script src="/bahith/static/js/pages.js" defer></script>
+  <meta name="bahith-base-path" content="/bahith/">
+  <meta name="bahith-api-base" content="https://vegetable-rev-suzuki-pope.trycloudflare.com">
+</head>
+<body>
+  <div class="heritage-band" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/bahith/" class="brand" aria-label="باحث — الصفحة الرئيسية">
+        <span>باحث</span><small lang="en" dir="ltr">BAHITH</small>
+      </a>
+      <nav class="primary" aria-label="التنقل الرئيسي">
+        <a href="/bahith/">الرئيسية</a>
+        <a href="/bahith/search/">البحث</a>
+        <a href="/bahith/documents/">الوثائق</a>
+        <a href="/bahith/browse/">التصفح</a>
+        <a href="/bahith/about/">عن باحث</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <aside class="notice" aria-label="عن التجربة العامة"><strong>باحث V2 · تجربة عامة</strong> — البحث في نصوص تعليمية مضمّنة. رفع الملفات وإدارتها متاحان في النسخة المحلية. قد تُحفظ أسئلتك مؤقتًا لتسريع البحث؛ لا تُدخل معلومات شخصية.</aside>
+      
+      
+      
+<header class="page-head page-head-split">
+  <div><p class="eyebrow">بحث موثّق</p><h1>ابحث في النصوص</h1><p>غيّر طريقة البحث أو حجم المتجه من الخيارات المتقدمة.</p></div>
+  <a class="button button-secondary" href="/bahith/documents/">الوثائق</a>
+</header>
+
+<form class="search-shell search-page-form" data-search-form action="/bahith/search/" method="get" role="search">
+  <div class="field">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.85-4.85"/></svg>
+    <input type="search" name="q" autocomplete="off" placeholder="اكتب سؤالك أو فكرتك بالعربية…" value="" aria-label="استعلام البحث">
+    <button type="submit" class="button button-primary">ابحث</button>
+  </div>
+
+  <div class="search-basics">
+    <label>طريقة البحث
+      <select name="method">
+        <option value="semantic" selected>دلالي</option>
+        <option value="keyword" >كلمي</option>
+        <option value="hybrid" >مدمج</option>
+        <option value="cascade" >متدرّج</option>
+      </select>
+    </label>
+    <label>نطاق البحث
+      <select name="document_id">
+        <option value="">كل النصوص</option>
+        <option value="demo" >مجموعة تعليمية تجريبية</option>
+      </select>
+    </label>
+  </div>
+
+  <details class="advanced">
+    <summary>خيارات Matryoshka المتقدمة</summary>
+    <div class="advanced-grid">
+      <fieldset>
+        <legend>أبعاد المتجه</legend>
+        <div class="dim-pills">
+          
+          <input type="radio" name="dim" id="dim-64" value="64" >
+          <label for="dim-64">64</label>
+          
+          <input type="radio" name="dim" id="dim-128" value="128" >
+          <label for="dim-128">128</label>
+          
+          <input type="radio" name="dim" id="dim-256" value="256" >
+          <label for="dim-256">256</label>
+          
+          <input type="radio" name="dim" id="dim-512" value="512" >
+          <label for="dim-512">512</label>
+          
+          <input type="radio" name="dim" id="dim-768" value="768" >
+          <label for="dim-768">768</label>
+          
+          <input type="radio" name="dim" id="dim-1024" value="1024" checked>
+          <label for="dim-1024">1024</label>
+          
+        </div>
+      </fieldset>
+      <label>عدد النتائج
+        <select name="top_k">
+          <option value="1" >1</option><option value="2" >2</option><option value="3" >3</option><option value="4" >4</option><option value="5" selected>5</option><option value="6" >6</option><option value="7" >7</option><option value="8" >8</option><option value="9" >9</option><option value="10" >10</option>
+        </select>
+      </label>
+    </div>
+    <dl class="method-help">
+      <div><dt>دلالي</dt><dd>يرتّب المقاطع حسب قرب متجهاتها من معنى الاستعلام.</dd></div>
+      <div><dt>كلمي</dt><dd>يفضّل التطابق المباشر مع الكلمات والعبارات.</dd></div>
+      <div><dt>مدمج</dt><dd>يجمع إشارات البحث الدلالي والكلمي في ترتيب واحد.</dd></div>
+      <div><dt>متدرّج</dt><dd>ينتقي مرشحين بالحجم المحدد ثم يعيد ترتيبهم بالمتجه الكامل.</dd></div>
+    </dl>
+  </details>
+</form>
+
+<div class="loading" data-search-loading hidden role="status">جارٍ البحث…</div>
+<noscript><div class="state-card state-error" role="alert"><h2>يلزم JavaScript للبحث المباشر</h2><p>يبقى تصفح الوثيقة والمقاطع متاحًا من روابط الموقع.</p></div></noscript><section id="results-region" aria-live="polite" aria-busy="false">
+<div class="state-card"><h2>ابدأ بسؤال</h2><p>اكتب استعلامًا في الأعلى، ثم اختر نطاق البحث إن أردت قصر النتائج على وثيقة واحدة.</p></div>
+</section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>باحث · كل نتيجة تقودك إلى مصدرها</p>
+      <p>مدعوم بنموذج <a href="https://huggingface.co/Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B" target="_blank" rel="noopener" lang="en" dir="ltr">Harrier Arabic Matryoshka</a></p>
+    </div>
+  </footer>
+</body>
+</html>

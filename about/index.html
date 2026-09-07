@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>عن باحث</title>
+  <meta name="description" content="باحث: بحث دلالي وكلمي في الوثائق العربية مع إظهار المصدر.">
+  <link rel="stylesheet" href="/bahith/static/css/style.css">
+  <script src="/bahith/static/js/pages.js" defer></script>
+  <meta name="bahith-base-path" content="/bahith/">
+  <meta name="bahith-api-base" content="https://vegetable-rev-suzuki-pope.trycloudflare.com">
+</head>
+<body>
+  <div class="heritage-band" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/bahith/" class="brand" aria-label="باحث — الصفحة الرئيسية">
+        <span>باحث</span><small lang="en" dir="ltr">BAHITH</small>
+      </a>
+      <nav class="primary" aria-label="التنقل الرئيسي">
+        <a href="/bahith/">الرئيسية</a>
+        <a href="/bahith/search/">البحث</a>
+        <a href="/bahith/documents/">الوثائق</a>
+        <a href="/bahith/browse/">التصفح</a>
+        <a href="/bahith/about/">عن باحث</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <aside class="notice" aria-label="عن التجربة العامة"><strong>باحث V2 · تجربة عامة</strong> — البحث في نصوص تعليمية مضمّنة. رفع الملفات وإدارتها متاحان في النسخة المحلية. قد تُحفظ أسئلتك مؤقتًا لتسريع البحث؛ لا تُدخل معلومات شخصية.</aside>
+      
+      
+      
+<header class="page-head"><p class="eyebrow">عن المشروع</p><h1>بحث عربي يعود إلى المصدر</h1><p>أداة عملية لاستكشاف النصوص، مع خيارات واضحة وحدود معلنة.</p></header>
+
+<div class="prose">
+  <section><h2>باحث V2 · هوية سعودية وبحث عربي</h2><p>ألوان الرمل والنخيل، والإيقاع الهندسي المستوحى من التراث، وواجهة تبدأ من اللغة العربية. الهوية سعودية، وموضوعات البحث عامة.</p></section>
+  <section><h2>نتائج موثّقة بسياقها</h2><p>على مجموعة تجريبية من 120 سؤالًا و30 نصًا، حقق البحث الدلالي بـ1024 بُعدًا نتيجة صحيحة أولى في 90% من الأسئلة، ونتيجة صحيحة ضمن أول خمس نتائج في 96.7%. هذه نتائج كشف تراجع على أمثلة معروفة، وليست دقة عامة على كل المستندات.</p><p><a href="https://github.com/Abdulrahman-S-Asiri/bahith/tree/3a74bb53abff08f951c2297baa7e4b09c228ce26/docs/benchmarks" target="_blank" rel="noopener">اقرأ إعدادات القياس والنتائج التفصيلية</a></p></section>
+  <section><h2>ما الذي يفعله باحث؟</h2><p>يحوّل الاستعلام والمقاطع إلى متجهات رقمية، ثم يرتّب المقاطع بحسب القرب بينها. يمكنك أيضًا استخدام التطابق الكلمي أو دمج الطريقتين. تبقى النتيجة مدخلًا للقراءة والتحقق من المصدر.</p></section>
+  <section><h2>تضمينات Matryoshka</h2><p>دُرّب النموذج بحيث يمكن اقتطاع المتجه من بدايته إلى أحجام مدعومة، ثم إعادة تطبيعه واستخدامه في البحث. البعد الأصغر يخفّض كلفة التخزين والمقارنة، وقد يغيّر ترتيب النتائج؛ لذلك لا يُفترض أن يكون مساويًا للمتجه الكامل في كل استعلام.</p>
+    <div class="dimension-scale" aria-label="أبعاد المتجه المدعومة"><span>64</span><span>128</span><span>256</span><span>512</span><span>768</span><span>1024</span></div>
+  </section>
+  <section><h2>كيف تقرأ الدرجات؟</h2><p>درجة التشابه مقياس رياضي للقرب داخل هذا الفهرس، وليست نسبة ثقة أو ضمانًا لصحة النص. وفي البحث المدمج تصبح الدرجة إشارة ترتيب ناتجة عن جمع أكثر من طريقة، فلا تُقارن مباشرة بدرجة التشابه الدلالي.</p></section>
+  <section><h2>حدود علمية وعملية</h2><ul class="limits"><li>قد تفشل المطابقة مع الأسئلة الغامضة أو النصوص المتخصصة التي لم يمثلها تدريب النموذج جيدًا.</li><li>تقسيم الوثيقة إلى مقاطع قد يفصل سياقًا مهمًا بين مقطعين.</li><li>النتائج لا تتحقق من صدق المصدر أو حداثته ولا تستبدل قراءة الوثيقة.</li><li>المجموعة التجريبية العامة أمثلة مضمّنة، وتختلف عن الوثائق التي يضيفها المستخدم.</li></ul></section>
+
+  <aside class="spec-card">
+    <h2>المراجع التقنية</h2>
+    <dl><div><dt>النموذج</dt><dd><a href="https://huggingface.co/Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B" target="_blank" rel="noopener" lang="en" dir="ltr">Harrier-Arabic-Matryoshka-0.6B</a></dd></div><div><dt>النموذج الأساس</dt><dd><a href="https://huggingface.co/microsoft/harrier-oss-v1-0.6b" target="_blank" rel="noopener" lang="en" dir="ltr">microsoft/harrier-oss-v1-0.6b</a></dd></div><div><dt>حجم المجموعة التجريبية</dt><dd>30 مقطعًا عربيًا</dd></div></dl>
+  </aside>
+</div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>باحث · كل نتيجة تقودك إلى مصدرها</p>
+      <p>مدعوم بنموذج <a href="https://huggingface.co/Omartificial-Intelligence-Space/Harrier-Arabic-Matryoshka-0.6B" target="_blank" rel="noopener" lang="en" dir="ltr">Harrier Arabic Matryoshka</a></p>
+    </div>
+  </footer>
+</body>
+</html>
