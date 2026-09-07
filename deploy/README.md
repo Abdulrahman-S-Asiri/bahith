@@ -1,4 +1,4 @@
-# Public V2 deployment
+# Public demo deployment
 
 The public release is an anonymous, read-only search demo over the bundled educational
 corpus. The local application retains PDF/TXT/Markdown import and library management.
